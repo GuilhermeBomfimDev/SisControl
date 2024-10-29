@@ -31,3 +31,27 @@
 - **Frontend:** Desenvolvido em HTML, CSS e JavaScript.
 - **Backend:** API RESTful em C# com ASP.NET Core, conectada a um banco de dados MySQL para persistência dos dados.
 - **Banco de Dados:** SQL no Azure, com tabelas para usuários e itens de estoque.
+
+## Capturas de Tela
+
+- **Tela de Login:** Interface de autenticação de usuário com validação de credenciais.
+- **Main Page:** Tela principal para consulta, realização do pedido e cadastro de novos itens.
+
+## Aprendizados e Habilidades Demonstradas
+Este projeto reflete a experiência com desenvolvimento backend em C# e a integração completa entre frontend e backend, mostrando competências em:
+
+- Autenticação Segura e Gerenciamento de Sessões
+- Configuração de CORS e Integração entre Frontend e Backend
+- Hospedagem de API e Banco de Dados na Nuvem
+- Boas Práticas de Segurança e Estruturação de API REST
+
+## Próximos Passos
+
+- **Histórico de pedidos:** Histórico de pedidos para controle dos administradores
+- **Recuperação de senhas:** Função para recuperar e alterar senhas
+- **Notificações e Alertas:** Implementar notificações para alertar sobre baixa quantidade em estoque e confirmação de pedido.
+- **Relatórios Personalizados:** Exportação de relatórios de estoque.
+
+## Contribuição
+
+Sinta-se à vontade para fazer um fork do projeto e contribuir! Todos os tipos de contribuições são bem-vindos. Se tiver sugestões, por favor, abra um issue para discussão.
