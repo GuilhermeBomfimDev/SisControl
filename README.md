@@ -37,6 +37,12 @@
 - **Tela de Login:** Interface de autenticação de usuário com validação de credenciais.
 - **Main Page:** Tela principal para consulta, realização do pedido e cadastro de novos itens.
 
+  ![image](https://github.com/user-attachments/assets/ddb72ab8-d8db-4a99-abb1-5110336a3a78)
+
+  ![image](https://github.com/user-attachments/assets/e1e220c4-6fd1-48f4-9da3-0a76ed696d37)
+
+  ![SisControl - Main Page - Google Chrome 2024-10-29 11-00-10 (online-video-cutter com)](https://github.com/user-attachments/assets/d49983ee-b4a4-44ab-ad4a-c830f32b5e98)
+  
 ## Aprendizados e Habilidades Demonstradas
 Este projeto reflete a experiência com desenvolvimento backend em C# e a integração completa entre frontend e backend, mostrando competências em:
 
