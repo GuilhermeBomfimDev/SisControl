@@ -9,7 +9,7 @@ function styleForms(styleFormCads, styleFormSolic, styleFormPesq, styleFormUser)
 };
 
 // Função para exibir mensagens
-function showMessage(message, className) {
+function showMessageUser(message, className) {
     messageUser.innerText = message;
     messageUser.className = className;
     messageUser.style.display = 'block';
@@ -26,13 +26,23 @@ if (userFunction === 'Admin') {
                 event.preventDefault();
 
                 const cpf = document.getElementById('cpf').value;
+                let response = "";
 
-                const response = await fetch(`https://localhost:5201/api/UserCadastro/searchUser/${encodeURIComponent(cpf)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                if (inProducao === 'S') {
+                    response = await fetch(`https://siscontrol-fdfhghebapc5cvbh.brazilsouth-01.azurewebsites.net/api/UserCadastro/searchUser/${encodeURIComponent(cpf)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                } else {
+                    response = await fetch(`https://localhost:5201/api/UserCadastro/searchUser/${encodeURIComponent(cpf)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                }
 
                 if (response.ok) {
                     const data = await response.json();
@@ -46,7 +56,7 @@ if (userFunction === 'Admin') {
                     messageUser.style.display = 'none';
                     document.getElementById('userInfo').classList.remove('hidden');
                 } else {
-                    showMessage('Usuário não encontrado.', 'error')
+                    showMessageUser('Usuário não encontrado.', 'error')
                     return;
                 }
             })
