@@ -1,6 +1,13 @@
 const cadastrarButton = document.getElementById('cadastrarItem');
 const pesquisarButton = document.getElementById('pesquisarItem');
 const closeContainerDireita = document.getElementById('closeContainerDireita');
+const buttonAlterItem = document.getElementById('buttonAlterItem');
+const buttonDelItem = document.getElementById('buttonDelItem');
+const buttonItemAgree = document.getElementById('buttonItemAgree');
+const buttonItemDegree = document.getElementById('buttonItemDegree');
+const alterarQuantidade = document.getElementById('alterarQuantidade');
+const alterarDescricao = document.getElementById('alterarDescricao');
+let idItem;
 
 const formCadastro = document.getElementById('formCadastrar');
 const formPesquisar = document.getElementById('formPesquisar');
@@ -18,11 +25,10 @@ function hideMessageAndButtons() {
     buttonItemAgree.style.display = 'none';
     buttonItemDegree.style.display = 'none';
     alterarQuantidade.style.display = 'none';
-    alterarDecricao.style.display = 'none';
+    alterarDescricao.style.display = 'none';
 }
 
 // ================= Campo de Cadastro de item =================
-
 if (userFunction === 'Admin') {
     cadastrarButton.style.display = 'inline';
 
@@ -80,9 +86,7 @@ if (userFunction === 'Admin') {
     })
 }
 
-
 // ================= Campo de Pesquisa de item =================
-
 pesquisarButton.addEventListener('click', function () {
     if (formPesquisar.style.display === 'none' || formPesquisar.style.display === '') {
         formPesquisar.style.display = 'block';
@@ -98,9 +102,10 @@ pesquisarButton.addEventListener('click', function () {
 document.getElementById('formPesquisar').addEventListener('submit', async function (event) {
     event.preventDefault();
 
+    let dadosItem;
     const nomeItem = document.getElementById('NomeItemP').value;
-    const idItem = document.getElementById('Codigo').value;
-    let responseGetItem = '';
+    idItem = document.getElementById('Codigo').value;
+    let responseGetItem;
 
     // Funções para mostrar mensagens
     function showMessagePesq(message, className) {
@@ -165,7 +170,8 @@ document.getElementById('formPesquisar').addEventListener('submit', async functi
 
         if (responseGetItem.ok) {
             messagePesq.style.display = 'none';
-            const dadosItem = await responseGetItem.json();
+            dadosItem = await responseGetItem.json();
+            idItem = dadosItem.idItem;
             console.log(dadosItem);
             document.getElementById('itemId').textContent = dadosItem.idItem;
             document.getElementById('itemNome').textContent = dadosItem.nomeItem;
@@ -181,18 +187,11 @@ document.getElementById('formPesquisar').addEventListener('submit', async functi
             document.getElementById('buttonAddItem').style.display = 'inline';
 
             if (userFunction === 'Admin') {
-                const buttonAlterItem = document.getElementById('buttonAlterItem');
-                const buttonDelItem = document.getElementById('buttonDelItem');
-                const buttonItemAgree = document.getElementById('buttonItemAgree');
-                const buttonItemDegree = document.getElementById('buttonItemDegree');
-                const alterarQuantidade = document.getElementById('alterarQuantidade');
-                const alterarDecricao = document.getElementById('alterarDecricao');
-
                 // Mostrar botões para Admin
                 buttonAlterItem.style.display = 'inline';
                 buttonDelItem.style.display = 'inline';
 
-                // ================ Evento para deletar item ======================
+                // ====================== Evento para deletar item ======================
                 buttonDelItem.addEventListener('click', () => {
                     showMessageBtItens("Essa ação é irreversível. Deseja excluir o item?", 'alert');
                     buttonItemAgree.style.display = 'inline';
@@ -234,46 +233,50 @@ document.getElementById('formPesquisar').addEventListener('submit', async functi
                     buttonItemDegree.addEventListener('click', hideMessageAndButtons);
                 });
 
-
-                // ==================== Evento para Alterar dados de um item ===============
-
+                // ====================== Evento para Alterar dados de um item ======================
                 buttonAlterItem.addEventListener('click', () => {
                     showMessageBtItens("Informe o que deseja alterar e depois confirme a alteração", 'default');
                     buttonItemAgree.style.display = 'inline';
                     buttonItemDegree.style.display = 'inline';
                     alterarQuantidade.style.display = 'inline';
-                    alterarDecricao.style.display = 'inline';
+                    alterarDescricao.style.display = 'inline';
 
-                    let qtAlteracao =  document.getElementById('alterarQuantidade').value;
-                    let dsAlteracao = document.getElementById('alterarDecricao').value;
-
-                    const itemAtualizado = {
-                        IdItem: dadosItem.idItem,
-                        Quantidade: qtAlteracao,
-                        Descricao: dsAlteracao
-                    };
                     // Confirmar Alteração
                     buttonItemAgree.addEventListener('click', async () => {
                         buttonItemAgree.disabled = true;
+                        let responsePutItem;
+                        const qtAlteracao =  document.getElementById('alterarQuantidade').value;
+                        const dsAlteracao = document.getElementById('alterarDescricao').value;
+
+                        const itemAtualizado = {
+                            IdItem: idItem,
+                            Quantidade: parseInt(qtAlteracao, 10),
+                            Descricao: dsAlteracao
+                        }
 
                         try {
                             if (inProducao === "S") {
-                                responseGetItem = await fetch(`https://siscontrol-fdfhghebapc5cvbh.brazilsouth-01.azurewebsites.net/api/ItemCadastro/${encodeURIComponent(dadosItem.idItem)}`, {
+                                responsePutItem = await fetch(`https://siscontrol-fdfhghebapc5cvbh.brazilsouth-01.azurewebsites.net/api/ItemCadastro/${encodeURIComponent(dadosItem.idItem)}`, {
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        itemAtualizado
                                     },
+                                    body: JSON.stringify(itemAtualizado)
                                 });
                             } else {
-                                response = await fetch(`https://localhost:5201/api/ItemCadastro/${encodeURIComponent(dadosItem.idItem)}`, {
+                                responsePutItem = await fetch(`https://localhost:5201/api/ItemCadastro/${encodeURIComponent(itemAtualizado.IdItem)}`, {
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        
                                     },
+                                    body: JSON.stringify(itemAtualizado)
                                 });
                             }
 
-                            if (response.status == 204) {
+
+                            if (responsePutItem.status == 204) {
                                 showMessageBtItens('Dados do item alterado com sucesso!', 'success');
                             } else {
                                 showMessageBtItens('Erro ao alterar dados o item.', 'error');
